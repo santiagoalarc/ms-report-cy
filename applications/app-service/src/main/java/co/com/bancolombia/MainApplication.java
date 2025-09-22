@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 public class MainApplication {
     public static void main(String[] args) {
 
-        EnvLoader.loadConfig();
+        //EnvLoader.loadConfig();
 
         SpringApplication.run(MainApplication.class, args);
     }

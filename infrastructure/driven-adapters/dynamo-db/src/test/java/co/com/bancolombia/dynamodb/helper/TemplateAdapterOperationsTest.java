@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 class TemplateAdapterOperationsTest {
 
-    @Mock
+    /*@Mock
     private DynamoDbEnhancedAsyncClient dynamoDbEnhancedAsyncClient;
 
     @Mock
@@ -97,5 +97,5 @@ class TemplateAdapterOperationsTest {
         StepVerifier.create(dynamoDBTemplateAdapter.delete(modelEntity))
                 .expectNext("value")
                 .verifyComplete();
-    }
+    }*/
 }

@@ -28,4 +28,8 @@ public class Handler {
                         .bodyValue(reportDTORes)
                 );
     }
+
+    public Mono<ServerResponse> healthCheck(ServerRequest serverRequest){
+        return ServerResponse.ok().bodyValue("ok");
+    }
 }
