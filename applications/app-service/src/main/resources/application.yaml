@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 spring:
   application:
     name: "MsReport"
@@ -10,7 +10,8 @@ spring:
       enabled: true
       path: "/h2"
   profiles:
-    include: null
+    ##include: null
+    active: prod
 management:
   endpoints:
     web:
@@ -22,3 +23,26 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+jwt:
+  secret: "${JWT_SECRET}"
+  expiration: "${JWT_EXPIRATION}"
+routes:
+  paths:
+    reports: "/api/v1/reportes"
+entrypoint:
+  sqs:
+    region: "us-east-2"
+    #endpoint: "http://localhost:4566"
+    queueUrl: "https://sqs.us-east-2.amazonaws.com/675016865295/approvedLoanQueue"
+    waitTimeSeconds: 20
+    maxNumberOfMessages: 10
+    visibilityTimeoutSeconds: 10
+    numberOfThreads: 1
+    accessKey: "${AWS_ACCESS_KEY}"
+    secretKey: "${AWS_SECRET_KEY}"
+aws:
+  region: "us-east-2"
+  accessKey: "${AWS_ACCESS_KEY}"
+  secretKey: "${AWS_SECRET_KEY}"
+  dynamodb:
+    endpoint: "http://localhost:8000"
