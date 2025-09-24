@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 public class EnvLoader {
 
-    private static final String DEFAULT_ENV_FILE = ".env";
+    private static final String DEFAULT_ENV_FILE = ".env.dev";
 
     public static void loadConfig() {
 

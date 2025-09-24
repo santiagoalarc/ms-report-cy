@@ -1,22 +1,5 @@
 package co.com.bancolombia.sqs.listener.helper;
 
-import co.com.bancolombia.sqs.listener.SQSProcessor;
-import co.com.bancolombia.sqs.listener.config.SQSProperties;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
-import reactor.core.publisher.Flux;
-import reactor.test.StepVerifier;
-import software.amazon.awssdk.services.sqs.SqsAsyncClient;
-import software.amazon.awssdk.services.sqs.model.*;
-
-import java.util.concurrent.CompletableFuture;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 class SQSListenerTest {
 
     /*@Mock
