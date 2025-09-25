@@ -30,3 +30,5 @@ include ':dynamo-db'
 project(':dynamo-db').projectDir = file('./infrastructure/driven-adapters/dynamo-db')
 include ':rest-consumer'
 project(':rest-consumer').projectDir = file('./infrastructure/driven-adapters/rest-consumer')
+include ':sns-aws'
+project(':sns-aws').projectDir = file('./infrastructure/driven-adapters/sns-aws')

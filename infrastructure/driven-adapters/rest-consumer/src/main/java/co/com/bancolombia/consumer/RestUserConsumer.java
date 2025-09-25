@@ -10,10 +10,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Service
@@ -30,6 +34,13 @@ public class RestUserConsumer implements AuthorizationService {
     @Value("${adapter.restconsumer.retry}")
     private Integer retry;
 
+    @Value("${adapter.restconsumer.user.email}")
+    private String email;
+
+    @Value("${adapter.restconsumer.user.password}")
+    private String password;
+
+
     private final Logger log = Logger.getLogger(RestLoanConsumer.class.getName());
 
 
@@ -37,10 +48,16 @@ public class RestUserConsumer implements AuthorizationService {
     public Mono<Token> generateToken() {
         log.info("ENTER TO RestUserConsumer - generateToken:: ");
 
-        return webClientUser.get()
+        Map<String, String> payload = new HashMap<>();
+        payload.put("email", email);
+        payload.put("password", password);
+
+        return webClientUser.post()
                 .uri(uriBuilder -> uriBuilder
                         .path(urlGetToken)
                         .build())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(payload))
                 .retrieve()
                 .onStatus(
                         HttpStatus.INTERNAL_SERVER_ERROR::equals,

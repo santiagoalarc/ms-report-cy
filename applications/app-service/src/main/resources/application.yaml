@@ -49,6 +49,13 @@ aws:
   secretKey: "${AWS_SECRET_KEY}"
   dynamodb:
     endpoint: "http://localhost:8000"
+  sns:
+    accessKey: "${AWS_ACCESS_KEY}"
+    secretKey: "${AWS_SECRET_KEY}"
+    region: "us-east-2"
+    topicArn: "arn:aws:sns:us-east-2:675016865295:schedule-topic"
+    email:
+      template-daily-report: "applications/app-service/src/main/resources/templates/dailyReportEmail.html"
 adapter:
   restconsumer:
     timeout: 5000
@@ -57,6 +64,8 @@ adapter:
     user:
       host: "${AUTH_API_URL}"
       token-url: "/api/v1/login"
+      email: "${AUTH_USER_API}"
+      password: "${AUTH_PASSWORD_API}"
     loan:
       host: "${LOAN_API_URL}"
       loan-today-url: "/api/v1/solicitud/loans-today"
