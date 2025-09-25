@@ -7,6 +7,7 @@ public record SQSProperties(
         String region,
         String endpoint,
         String queueUrl,
+        String dailyReportUrl,
         String accessKey,
         String secretKey,
         int waitTimeSeconds,

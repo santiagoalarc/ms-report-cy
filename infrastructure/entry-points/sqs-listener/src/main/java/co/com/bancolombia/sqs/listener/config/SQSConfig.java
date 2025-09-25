@@ -1,27 +1,48 @@
 package co.com.bancolombia.sqs.listener.config;
 
+import co.com.bancolombia.sqs.listener.DailyReportSQSProcessor;
+import co.com.bancolombia.sqs.listener.SQSProcessor;
 import co.com.bancolombia.sqs.listener.helper.SQSListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import reactor.core.publisher.Mono;
 import software.amazon.awssdk.auth.credentials.*;
 import software.amazon.awssdk.metrics.MetricPublisher;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
-import software.amazon.awssdk.services.sqs.model.Message;
 
 import java.net.URI;
-import java.util.function.Function;
 
 @Configuration
 public class SQSConfig {
 
-    @Bean
-    public SQSListener sqsListener(SqsAsyncClient client, SQSProperties properties, Function<Message, Mono<Void>> fn) {
+    @Bean("loanAmountSQSListener")
+    public SQSListener loanAmountSQSListener(
+            SqsAsyncClient client,
+            SQSProperties properties,
+            SQSProcessor sqsProcessor) {
+
+        SQSProperties loanProperties = createPropertiesForQueue(properties, properties.queueUrl());
+
         return SQSListener.builder()
                 .client(client)
-                .properties(properties)
-                .processor(fn)
+                .properties(loanProperties)
+                .processor(sqsProcessor)
+                .build()
+                .start();
+    }
+
+    @Bean("dailyReportSQSListener")
+    public SQSListener dailyReportSQSListener(
+            SqsAsyncClient client,
+            SQSProperties properties,
+            DailyReportSQSProcessor dailyReportProcessor) {
+
+        SQSProperties dailyReportProperties = createPropertiesForQueue(properties, properties.dailyReportUrl());
+
+        return SQSListener.builder()
+                .client(client)
+                .properties(dailyReportProperties)
+                .processor(dailyReportProcessor)
                 .build()
                 .start();
     }
@@ -34,6 +55,21 @@ public class SQSConfig {
                 .overrideConfiguration(o -> o.addMetricPublisher(publisher))
                 .credentialsProvider(getProviderChain(properties))
                 .build();
+    }
+
+    private SQSProperties createPropertiesForQueue(SQSProperties originalProperties, String queueUrl) {
+        return new SQSProperties(
+                originalProperties.region(),
+                originalProperties.endpoint(),
+                queueUrl,
+                originalProperties.dailyReportUrl(),
+                originalProperties.accessKey(),
+                originalProperties.secretKey(),
+                originalProperties.waitTimeSeconds(),
+                originalProperties.visibilityTimeoutSeconds(),
+                originalProperties.maxNumberOfMessages(),
+                originalProperties.numberOfThreads()
+        );
     }
 
     private AwsCredentialsProviderChain getProviderChain(SQSProperties properties) {
